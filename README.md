@@ -54,7 +54,7 @@ Powered by **Google Gemini 2.0**, SecondOrder runs **Monte Carlo simulations acr
 ## 🧠 How It Works
 
 <p align="center">
-  <img width="700" alt="SecondOrder Architecture" src="https://i.imgur.com/placeholder.png"/>
+  <img width="800" alt="SecondOrder Architecture" src="./assets/architecture.png"/>
 </p>
 
 ```
@@ -105,7 +105,7 @@ Powered by **Google Gemini 2.0**, SecondOrder runs **Monte Carlo simulations acr
 
 ### 1. Clone & Configure
 ```bash
-git clone https://github.com/yourusername/SecondOrder.git
+git clone https://github.com/vibhorrrrr/SecondOrder.git
 cd SecondOrder
 
 # Set your API key
