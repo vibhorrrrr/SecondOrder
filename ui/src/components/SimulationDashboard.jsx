@@ -31,6 +31,7 @@ function SimulationDashboard() {
     const [simulationResults, setSimulationResults] = useState(null);
     const [loadingSimulation, setLoadingSimulation] = useState(false);
     const [error, setError] = useState(null);
+    const [apiQuotaExhausted, setApiQuotaExhausted] = useState(false);
 
     // Validation rules: fields that must be positive (> 0) vs non-negative (>= 0)
     const mustBePositive = ['cash', 'customers', 'arpu', 'ltv']; // Cannot be 0 or negative
@@ -60,9 +61,21 @@ function SimulationDashboard() {
         }));
     };
 
+    // Helper function to check if error is API quota related
+    const isQuotaError = (errorMessage) => {
+        const quotaKeywords = [
+            'quota', 'rate limit', 'rate_limit', 'too many requests',
+            '429', 'exhausted', 'exceeded', 'limit exceeded',
+            'resource exhausted', 'resourceexhausted'
+        ];
+        const lowerMessage = errorMessage.toLowerCase();
+        return quotaKeywords.some(keyword => lowerMessage.includes(keyword));
+    };
+
     const handleGenerateOptions = async () => {
         setLoadingOptions(true);
         setError(null);
+        setApiQuotaExhausted(false);
         setOptions([]);
         try {
             const data = await generateNodes(initialState);
@@ -70,7 +83,11 @@ function SimulationDashboard() {
                 setOptions(data.nodes);
             }
         } catch (err) {
-            setError(err.message);
+            if (isQuotaError(err.message)) {
+                setApiQuotaExhausted(true);
+            } else {
+                setError(err.message);
+            }
         } finally {
             setLoadingOptions(false);
         }
@@ -80,6 +97,7 @@ function SimulationDashboard() {
         setSelectedOption(option);
         setLoadingSimulation(true);
         setError(null);
+        setApiQuotaExhausted(false);
         setSimulationResults(null);
 
         try {
@@ -122,7 +140,11 @@ function SimulationDashboard() {
             setSimulationResults(resultNode);
 
         } catch (err) {
-            setError(err.message);
+            if (isQuotaError(err.message)) {
+                setApiQuotaExhausted(true);
+            } else {
+                setError(err.message);
+            }
         } finally {
             setLoadingSimulation(false);
         }
@@ -165,7 +187,7 @@ function SimulationDashboard() {
                     </svg>
                 </button>
                 <span className="mobile-title">
-                    <span className="gradient-text-sm">SecondOrder</span> Simulator
+                    <span className="gradient-text-sm">Second Order</span> Simulator
                 </span>
             </div>
 
@@ -237,7 +259,6 @@ function SimulationDashboard() {
                         </>
                     ) : (
                         <>
-                            <span className="button-icon">🎯</span>
                             Generate Strategic Options
                         </>
                     )}
@@ -250,6 +271,44 @@ function SimulationDashboard() {
                     </div>
                 )}
             </aside>
+
+            {/* API Quota Exhausted Modal */}
+            {apiQuotaExhausted && (
+                <div className="quota-modal-overlay">
+                    <div className="quota-modal">
+                        <div className="quota-modal-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 6v6l4 2" />
+                            </svg>
+                        </div>
+                        <h2 className="quota-modal-title">API Limit Reached</h2>
+                        <p className="quota-modal-description">
+                            The Gemini AI API quota has been exhausted. This typically happens when too many requests are made in a short period.
+                        </p>
+                        <div className="quota-modal-tips">
+                            <div className="quota-tip">
+                                <span className="tip-icon">⏱️</span>
+                                <span>Wait a few minutes before trying again</span>
+                            </div>
+                            <div className="quota-tip">
+                                <span className="tip-icon">🔄</span>
+                                <span>The limit resets periodically (usually per minute)</span>
+                            </div>
+                            <div className="quota-tip">
+                                <span className="tip-icon">💡</span>
+                                <span>Consider upgrading your API plan for higher limits</span>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setApiQuotaExhausted(false)}
+                            className="quota-modal-button"
+                        >
+                            Got it, I'll try later
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Main Content */}
             <main className="main-content">
@@ -504,15 +563,14 @@ function SimulationDashboard() {
                             </p>
                             <div className="empty-features">
                                 <div className="feature">
-                                    <span className="feature-icon">🎲</span>
                                     <span>50+ Monte Carlo Paths</span>
                                 </div>
                                 <div className="feature">
-                                    <span className="feature-icon">🤖</span>
+
                                     <span>Gemini AI Analysis</span>
                                 </div>
                                 <div className="feature">
-                                    <span className="feature-icon">📊</span>
+
                                     <span>P10/P50/P90 Distributions</span>
                                 </div>
                             </div>
