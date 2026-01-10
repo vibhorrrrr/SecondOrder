@@ -5,6 +5,7 @@ import SimulationChart from './SimulationChart'
 function SimulationDashboard() {
     const SIM_MONTHS = 12
     const SIM_RUNS = 50
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     const [initialState, setInitialState] = useState({
         cash: 1000000,
@@ -60,6 +61,7 @@ function SimulationDashboard() {
             setLoadingOptions(false)
         }
     }
+
 
     const handleRunSimulation = async (option) => {
         setSelectedOption(option)
@@ -131,41 +133,84 @@ function SimulationDashboard() {
     return (
         <div className="flex h-screen bg-black text-zinc-300 font-sans overflow-hidden">
             {/* Left Sidebar: Controls & State */}
-            <div className="w-80 flex-shrink-0 border-r border-zinc-800 bg-zinc-950 p-4 overflow-y-auto">
-                <h1 className="text-xl font-bold text-white mb-6">Business Simulator</h1>
+            <div className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-zinc-950">
+                <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="text-zinc-300 text-lg"
+                >
+                    ☰
+                </button>
+                <span className="text-sm font-semibold text-white">
+                    Business Simulator
+                </span>
+            </div>
 
-                <div className="mb-6">
-                    <h2 className="text-sm font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Current State</h2>
-                    <div className="space-y-3">
-                        {Object.entries(initialState).map(([key, value]) => (
-                            <div key={key} className="flex flex-col">
-                                <label className="text-[10px] uppercase text-zinc-600 mb-1">{key.replace('_', ' ')}</label>
-                                <input
-                                    type="number"
-                                    name={key}
-                                    value={value}
-                                    onChange={handleInputChange}
-                                    className="bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-xs text-zinc-200 focus:outline-none focus:border-blue-500"
-                                />
-                            </div>
-                        ))}
-                    </div>
+            {/* Overlay */}
+            {sidebarOpen && (
+                <div
+                    onClick={() => setSidebarOpen(false)}
+                    className="fixed inset-0 bg-black/60 z-30 md:hidden"
+                />
+            )}
+
+            {/* Sidebar */}
+            <aside
+                className={`
+                    fixed z-40 inset-y-0 left-0 w-80
+                    bg-zinc-950 border-r border-zinc-800 p-4 overflow-y-auto
+                    transform transition-transform duration-300
+                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                    md:static md:translate-x-0
+                `}
+            >
+                <div className="md:hidden flex justify-end mb-2">
+                    <button
+                        onClick={() => setSidebarOpen(false)}
+                        className="text-zinc-400 text-sm"
+                    >
+                        ✕
+                    </button>
+                </div>
+
+                <h1 className="text-xl font-bold text-white mb-6 hidden md:block">
+                    Business Simulator
+                </h1>
+
+                <h2 className="text-sm font-semibold text-zinc-500 mb-3 uppercase">
+                    Current State
+                </h2>
+
+                <div className="space-y-3 mb-6">
+                    {Object.entries(initialState).map(([key, value]) => (
+                        <div key={key} className="flex flex-col">
+                            <label className="text-[10px] uppercase text-zinc-600 mb-1">
+                                {key.replace('_', ' ')}
+                            </label>
+                            <input
+                                type="number"
+                                name={key}
+                                value={value}
+                                onChange={handleInputChange}
+                                className="bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-xs"
+                            />
+                        </div>
+                    ))}
                 </div>
 
                 <button
                     onClick={handleGenerateOptions}
                     disabled={loadingOptions}
-                    className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-blue-600 hover:bg-blue-500 text-white rounded py-2 text-sm"
                 >
                     {loadingOptions ? 'Generating...' : 'Generate Strategic Options'}
                 </button>
 
                 {error && (
-                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded text-red-400 text-xs">
+                    <div className="mt-4 text-xs text-red-400">
                         {error}
                     </div>
                 )}
-            </div>
+            </aside>
 
             {/* Center: Options & Simulation */}
             <div className="flex-1 flex flex-col min-w-0 bg-black">
