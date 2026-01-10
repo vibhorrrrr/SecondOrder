@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: business-simulator
+    env: python
+    buildCommand: "npm install --prefix ui && npm run build --prefix ui && pip install -r requirements.txt"
+    startCommand: "python api.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: GOOGLE_API_KEY
+        sync: false

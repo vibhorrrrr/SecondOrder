@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "cd ui && npm install && npm run build",
+  "outputDirectory": "ui/dist",
+  "framework": null,
+  "functions": {
+    "api/index.py": {
+      "runtime": "@vercel/python@4.5.0",
+      "maxDuration": 60,
+      "includeFiles": "{*.py,utils/**/*.py,api/**/*.py}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.py"
+    }
+  ]
+}

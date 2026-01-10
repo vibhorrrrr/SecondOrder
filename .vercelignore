@@ -1,0 +1,36 @@
+# Python virtual env - MUST be excluded
+.venv
+.venv/
+.venv/**
+**/.venv/**
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node
+node_modules/
+**/node_modules/**
+app/frontend/node_modules/
+
+# Logs
+logs/
+*.log
+
+# Local env
+.env
+.env.local
+
+# Git
+.git/
+
+# IDE
+.idea/
+.vscode/
+
+# Test files
+tests/
+test_*.py
+
+# App folders (not used)
+app/
+core/

@@ -1,0 +1,160 @@
+﻿============================================================
+CAUSAL GRAPH PROTOTYPE - VALIDATION TEST
+============================================================
+
+Causal Graph: 9 edges defined
+
+Edge Summary:
+  1. ad_spend -> new_customers (immediate)
+  2. new_customers -> burn (immediate)
+  3. ad_spend -> cac (immediate, threshold=50000)
+  4. ad_spend -> market_saturation (lag=1)
+  5. market_saturation -> cac (lag=2, threshold=0.3)
+  6. market_saturation -> arpu (lag=2, threshold=0.3)
+  7. customers -> rapid_growth (immediate, threshold=0.2)
+  8. rapid_growth -> cultural_degradation (lag=3)
+  9. cultural_degradation -> churn_rate (lag=2, threshold=0.1)
+
+============================================================
+Running 6-month simulation...
+============================================================
+
+============================================================
+MONTH 0
+============================================================
+Decision: ad_spend = $9,982
+
+Causal Effects:
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+
+State Summary:
+  Customers: 1,049
+  Cash: $519,028
+  CAC: $100.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.00
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 1
+
+============================================================
+MONTH 1
+============================================================
+Decision: ad_spend = $14,891
+
+Causal Effects:
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+
+State Summary:
+  Customers: 1,145
+  Cash: $534,117
+  CAC: $100.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.00
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 2
+
+============================================================
+MONTH 2
+============================================================
+Decision: ad_spend = $10,843
+
+Causal Effects:
+  Applied: High ad spend saturates market (3rd order, lag=1) (ad_spend -> market_saturation)
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+
+State Summary:
+  Customers: 1,196
+  Cash: $556,974
+  CAC: $100.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.10
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 2
+
+============================================================
+MONTH 3
+============================================================
+Decision: ad_spend = $88,924
+
+Causal Effects:
+  Applied: High ad spend saturates market (3rd order, lag=1) (ad_spend -> market_saturation)
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Immediate: High ad spend improves CAC efficiency (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+
+State Summary:
+  Customers: 2,026
+  Cash: $495,411
+  CAC: $95.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.15
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 2
+
+============================================================
+MONTH 4
+============================================================
+Decision: ad_spend = $35,943
+
+Causal Effects:
+  Applied: High ad spend saturates market (3rd order, lag=1) (ad_spend -> market_saturation)
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+
+State Summary:
+  Customers: 2,303
+  Cash: $524,548
+  CAC: $95.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.11
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 2
+
+============================================================
+MONTH 5
+============================================================
+Decision: ad_spend = $43,328
+
+Causal Effects:
+  Applied: High ad spend saturates market (3rd order, lag=1) (ad_spend -> market_saturation)
+  Immediate: Ad spend directly acquires customers (1st order)
+  Immediate: More customers increase burn (2nd order)
+  Queued (lag=1): High ad spend saturates market (3rd order, lag=1)
+  Queued (lag=2): Market saturation increases CAC (3rd order, lag=2)
+  Queued (lag=2): Market saturation reduces ARPU (3rd order, lag=2)
+
+State Summary:
+  Customers: 2,644
+  Cash: $555,590
+  CAC: $95.00
+  ARPU: $50.00
+  Churn Rate: 5.0%
+  Market Saturation: 0.89
+  Cultural Degradation: 0.00
+  Active Lagged Effects: 4
+
+============================================================
+SIMULATION SUMMARY
+============================================================
+
+Initial -> Final:
+  Customers: 1,000 -> 2,644
+  Cash: $500,000 -> $555,590
+  CAC: $100.00 -> $95.00
+  ARPU: $50.00 -> $50.00
+  Churn Rate: 5.0% -> 5.0%
+
+[OK] Prototype validation complete!
